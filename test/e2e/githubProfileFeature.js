@@ -1,6 +1,6 @@
 describe('GitHub profile finder', function() {
 
-  var searchBox = element(by.model('searchTerm'))
+  var searchBox = element(by.model('searchCtrl.searchTerm'))
   var searchButton = element(by.className('btn'))
 
   beforeEach(function() {
@@ -12,9 +12,24 @@ describe('GitHub profile finder', function() {
   });
 
   it('finds profiles', function() {
-    element(by.model('searchCtrl.searchTerm')).sendKeys('spike01');
-    element(by.className('btn')).click();
-    expect(element(by.binding('user.login')).getText()).toEqual('spike01');
+    searchBox.sendKeys('spike01');
+    searchButton.click();
+    var profiles = element.all(by.repeater('user in searchCtrl.searchResult.items'));
+    expect(profiles.get(0).getText()).toEqual('spike01');
+  });
+
+  // it('finds the last Spike', function() {
+  //   searchBox.sendKeys('spike');
+  //   searchButton.click();
+  //   var profiles = element.all(by.repeater('user in searchCtrl.searchResult.items'));
+  //   expect(profiles.last().getText()).toContain('spike');
+  // });
+
+  it('finds how many spikes', function() {
+    searchBox.sendKeys('spike');
+    searchButton.click();
+    var number = element.all(by.repeater('user in searchCtrl.searchResult.items'));
+    expect(number.count()).toEqual(30);
   });
 
 });
