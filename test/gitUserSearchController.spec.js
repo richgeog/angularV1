@@ -2,6 +2,7 @@ describe('GitUserSearchController', function() {
   beforeEach(module('GitUserSearch'));
 
   var ctrl;
+  var items;
 
   beforeEach(inject(function($controller) {
     ctrl = $controller('GitUserSearchController');
@@ -18,24 +19,19 @@ describe('GitUserSearchController', function() {
     beforeEach(inject(function($httpBackend) {
       httpBackend = $httpBackend
       httpBackend
-        .when("GET", "https://api.github.com/search/users?q=hello")
+        .expectGET("https://api.github.com/search/users?q=hello")
         .respond(
         { items: items }
     );
+
+
+    afterEach(function() {
+      httpBackend.verifyNoOutstandingExpectation();
+      httpBackend.verifyNoOutstandingRequest();
+     });
 }));
 
-    var items = [
-      {
-        "login": "tansaku",
-        "avatar_url": "https://avatars.githubusercontent.com/u/30216?v=3",
-        "html_url": "https://github.com/tansaku"
-      },
-      {
-        "login": "stephenlloyd",
-        "avatar_url": "https://avatars.githubusercontent.com/u/196474?v=3",
-        "html_url": "https://github.com/stephenlloyd"
-      }
-    ];
+
 
     it('displays search results', function() {
       ctrl.searchTerm = 'hello';
